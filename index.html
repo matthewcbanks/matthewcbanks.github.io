@@ -6,7 +6,7 @@
     <title>My Retro Gruvbox Page</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&display=swap');
-        
+
         body {
             background-color: #282828;
             color: #ebdbb2;
@@ -20,12 +20,20 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
+            width: 90%;
+            max-width: 600px;
         }
         img {
             width: 120px;
             height: 120px;
             border-radius: 50%;
             border: 3px solid #d79921;
+        }
+        .name {
+            font-size: 24px;
+            font-weight: bold;
+            color: #fabd2f;
+            display: none;
         }
         .links {
             margin-top: 20px;
@@ -42,48 +50,57 @@
         .links a:hover {
             color: #fabd2f;
         }
+        .neo-data {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #3c3836;
+            border: 2px solid #d79921;
+            display: inline-block;
+            text-align: left;
+        }
     </style>
-        <script>
-            document.addEventListener("DOMContentLoaded", function() {
-                var img = document.querySelector("img");
-                var name = document.querySelector(".name");
-                
-                img.onerror = function() {
-                    img.style.display = "none";
-                    name.style.display = "block";
-                };
-    
-                // NASA API Fetch
-                const apiKey = "PPWWMjA6bqb8nJnxGekQWQVIO0ciFGDvvQeHcJac"; // Replace with your NASA API key
-                const startDate = new Date().toISOString().split("T")[0];
-                const endDate = startDate;
-                const apiUrl = `https://api.nasa.gov/neo/rest/v1/feed?start_date=${startDate}&end_date=${endDate}&api_key=${apiKey}`;
-    
-                fetch(apiUrl)
-                    .then(response => response.json())
-                    .then(data => {
-                        const neoContainer = document.getElementById("neo-data");
-                        const neoList = data.near_earth_objects[startDate];
-    
-                        if (neoList && neoList.length > 0) {
-                            neoContainer.innerHTML = "<h3>Near-Earth Objects Today:</h3>";
-                            neoList.forEach(neo => {
-                                neoContainer.innerHTML += `<p><strong>${neo.name}</strong> - Diameter: ${neo.estimated_diameter.meters.estimated_diameter_max.toFixed(2)}m</p>`;
-                            });
-                        } else {
-                            neoContainer.innerHTML = "<p>No Near-Earth Objects detected today.</p>";
-                        }
-                    })
-                    .catch(error => {
-                        console.error("Error fetching NASA data:", error);
-                        document.getElementById("neo-data").innerHTML = "<p>Failed to fetch data.</p>";
-                    });
-            });
-        </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var img = document.querySelector("img");
+            var name = document.querySelector(".name");
+            
+            img.onerror = function() {
+                img.style.display = "none";
+                name.style.display = "block";
+            };
+
+            // NASA API Fetch
+            const apiKey = "PPWWMjA6bqb8nJnxGekQWQVIO0ciFGDvvQeHcJac"; // Replace with your NASA API key
+            const startDate = new Date().toISOString().split("T")[0];
+            const endDate = startDate;
+            const apiUrl = `https://api.nasa.gov/neo/rest/v1/feed?start_date=${startDate}&end_date=${endDate}&api_key=${apiKey}`;
+
+            fetch(apiUrl)
+                .then(response => response.json())
+                .then(data => {
+                    const neoContainer = document.getElementById("neo-data");
+                    const neoList = data.near_earth_objects[startDate];
+
+                    if (neoList && neoList.length > 0) {
+                        neoContainer.innerHTML = "<h3>Near-Earth Objects Today:</h3>";
+                        neoList.forEach(neo => {
+                            neoContainer.innerHTML += `<p><strong>${neo.name}</strong> - Diameter: ${neo.estimated_diameter.meters.estimated_diameter_max.toFixed(2)}m</p>`;
+                        });
+                    } else {
+                        neoContainer.innerHTML = "<p>No Near-Earth Objects detected today.</p>";
+                    }
+                })
+                .catch(error => {
+                    console.error("Error fetching NASA data:", error);
+                    document.getElementById("neo-data").innerHTML = "<p>Failed to fetch data.</p>";
+                });
+        });
+    </script>
 </head>
 <body>
     <div class="container">
         <img src="your-image.jpg" alt="Matthew Banks">
+        <div class="name">Matthew Banks</div>
         <div class="links">
             <a href="https://github.com/matthewcbanks" target="_blank">GitHub</a>
             <a href="https://www.linkedin.com/in/matthew-banks-82a207220/" target="_blank">LinkedIn</a>
@@ -94,6 +111,9 @@
                 allowfullscreen=""
                 loading="lazy">
             </iframe>
+        </div>
+        <div id="neo-data" class="neo-data">
+            <p>Loading NASA data...</p>
         </div>
     </div>
 </body>
